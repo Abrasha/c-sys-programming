@@ -5,7 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define ASCII_SHIFT 'A' - 'a'
+#define ASCII_SHIFT 'a' - 'A'
 
 FILE *openInputFile(char *filename) {
     return fopen(filename, "r");
@@ -57,8 +57,6 @@ int main(int argc, char *argv[]) {
     if (out == NULL) {
         fprintf(stderr, "Error opening / creating output file: %s", outputFilename);
     }
-
-    readCount = 0;
 
     stats = malloc(sizeof(statistics));
     stats->readLines = 0;
