@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define ASCII_SHIFT 32
+#define ASCII_SHIFT 'A' - 'a'
 
 FILE *openInputFile(char *filename) {
     return fopen(filename, "r");
@@ -22,8 +22,11 @@ typedef struct _statistics statistics;
 
 int main(int argc, char *argv[]) {
 
-    if (argc != 3) {
+    if (argc < 3) {
         fprintf(stderr, "Too few arguments specified: %d", argc);
+        exit(EXIT_FAILURE);
+    } else if (argc > 3){
+        fprintf(stderr, "Too many arguments specified: %d", argc);
         exit(EXIT_FAILURE);
     }
 
