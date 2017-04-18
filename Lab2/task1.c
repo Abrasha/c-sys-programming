@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <errno.h>
+#include <sys/errno.h>
 
 #define CHILD_SLEEP_SEC 5
 

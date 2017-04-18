@@ -4,73 +4,66 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/errno.h>
-#include <sys/time.h>
-#include <sys/select.h>
-#include <stdbool.h>
+#include <sys/wait.h>
 
-#define STD_IN 0
-#define BUFFER_SIZE 512
+#define FORKED_CHILD 0
+#define INTERVAL_SEC 3
+#define ECHO_COUNT 15
 
-#define TIMEOUT_SEC 5
-#define TIMEOUT_USEC 0
+FILE *logger;
 
-void validateArgc(int argc){
-    if (argc < 2) {
-        fprintf(stderr, "Too few arguments specified: %d", argc);
-        exit(EXIT_FAILURE);
-    } else if (argc > 2) {
-        fprintf(stderr, "Too many arguments specified: %d", argc);
-        exit(EXIT_FAILURE);
-    }
+
+void open_log_file(const char *filename) {
+    logger = fopen(filename, "w+");
 }
 
-void zeroTimeout(struct timeval *timeout) {
-    timeout->tv_sec = TIMEOUT_SEC;
-    timeout->tv_usec = TIMEOUT_USEC;
+void open_default_log_file() {
+    open_log_file("log.log");
+}
+
+void write_to_log(const char *msg) {
+    fprintf(logger, msg);
+}
+
+void close_log() {
+    fclose(logger);
+}
+
+void child_action(void) {
+    int iteration = 0;
+
+    printf("Child process");
+    daemon(/* chdir to root */ 1, /* redirect to /dev/null */ 1);
+
+    for (; iteration < ECHO_COUNT; ++iteration) {
+        printf("After sleep. Iteration #%d", iteration);
+        write_to_log(sprintf("Child process: iteration #%d", iteration));
+        sleep(INTERVAL_SEC);
+    }
+
+    exit(EXIT_SUCCESS);
+}
+
+void parent_action(void) {
+    printf("Parent process");
+    exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char *argv[]) {
 
-    int fd = STDIN_FILENO;
-    char buf[BUFFER_SIZE];
-    struct timeval timeout;
-    int randomFd = 42;
-    char *label;
-    fd_set fds;
+    __pid_t forked_id = fork();
 
-    validateArgc(argc);
+    open_default_log_file();
 
-    label = argv[1];
-
-    bool running = true;
-
-    while (running) {
-        int sret;
-
-        FD_ZERO(&fds);
-        FD_SET(fd, &fds);
-
-        zeroTimeout(&timeout);
-
-        sret = select(randomFd, &fds, NULL, NULL, &timeout);
-        printf("select returned value: %d\n", sret);
-
-        if (sret == 0) {
-            fprintf(stderr, "select timeout. errno = %d\n", errno);
-        } else {
-            int ret;
-            ret = read(fd, (void *) buf, BUFFER_SIZE);
-            printf("read %2d symbols: \n", ret);
-
-            if (ret != -1) {
-                printf("\t%5s: %s\n", label, buf);
-            }
-
-        }
-
+    if (forked_id == FORKED_CHILD) {
+        write_to_log("forked child process");
+        child_action();
+        close_log();
+    } else {
+        write_to_log("forked parent process");
+        parent_action();
     }
 
     return EXIT_SUCCESS;
-
 }
 
