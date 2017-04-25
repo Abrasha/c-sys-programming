@@ -56,6 +56,8 @@ int main(int argc, char *argv[]) {
     open_default_log_file();
 
     if (forked_id == FORKED_CHILD) {
+        setsid();
+        daemon(0, 0);
         write_to_log("forked child process");
         child_action();
         close_log();
