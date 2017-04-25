@@ -3,5 +3,5 @@ project(Lab3)
 
 set(CMAKE_C_STANDARD 90)
 
-set(SOURCE_FILES task1.c)
+set(SOURCE_FILES task1.c task2.c)
 add_executable(Lab3 ${SOURCE_FILES})
