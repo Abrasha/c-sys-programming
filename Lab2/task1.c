@@ -25,6 +25,8 @@ int main(int argc, char *argv[]) {
 
     if (forked_id == 0) {
         print_process_metadata("Child process");
+        setsid();
+        daemon(0, 0);
         sleep(CHILD_SLEEP_SEC);
     } else {
         int exit_status = 0;
