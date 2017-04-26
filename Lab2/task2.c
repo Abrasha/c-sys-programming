@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/errno.h>
 #include <sys/wait.h>
+#include <string.h>
 
 #define FORKED_CHILD 0
 #define INTERVAL_SEC 3
@@ -36,8 +37,13 @@ void child_action(void) {
     daemon(/* chdir to root */ 1, /* redirect to /dev/null */ 1);
 
     for (; iteration < ECHO_COUNT; ++iteration) {
+        char *message;
+        char msg[strlen(message) * 2];
         printf("After sleep. Iteration #%d", iteration);
-        write_to_log(sprintf("Child process: iteration #%d", iteration));
+        message = "Child process: iteration #%d";
+        sprintf(msg, message, iteration);
+        write_to_log(message);
+        free(msg);
         sleep(INTERVAL_SEC);
     }
 
