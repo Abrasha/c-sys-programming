@@ -2,13 +2,10 @@
 #include "utility.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <netinet/in.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <sys/stat.h>
-#include <poll.h>
 
 
 void sendPDU(const char *buffer, int len, char *pipe) {

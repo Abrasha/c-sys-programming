@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include "constants.h"
 #include "utility.h"
@@ -7,13 +6,13 @@
 
 
 int main(int argc, char **argv) {
-    const InputParameters *params = getParams(argc, argv);
-    if (params->execution_mode == recieveMode) {
-        printf("Starting in receiving execution_mode");
-        recieve(params->dest_file, params->pipe_file);
-    } else if (params->execution_mode == transmitMode) {
-        printf("Starting in transmitting execution_mode");
-        transmit(params->dest_file, params->pipe_file);
+    const InputParameters *program_args = getParams(argc, argv);
+    if (program_args->execution_mode == recieveMode) {
+        fprintf(stdout, "Starting in receiving mode");
+        recieve(program_args->dest_file, program_args->pipe_file);
+    } else if (program_args->execution_mode == transmitMode) {
+        printf("Starting in transmitting mode");
+        transmit(program_args->dest_file, program_args->pipe_file);
     }
 
 

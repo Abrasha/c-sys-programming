@@ -1,5 +1,5 @@
 extern const char *fileparam;
-extern const char *pipeparam ;
+extern const char *pipeparam;
 extern const char *recieveModeParam;
 extern const char *transmitModeParam;
 extern const char *empty;

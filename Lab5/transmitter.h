@@ -1,2 +1,1 @@
-
-int transmit(const char* file, const char* pipe);
+int transmit(const char *file, const char *pipe);
